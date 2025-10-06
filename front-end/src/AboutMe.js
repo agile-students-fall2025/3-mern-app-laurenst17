@@ -1,28 +1,73 @@
+import { useState, useEffect } from 'react'
+import axios from 'axios'
+import './App.css'
 
-  import { Link } from 'react-router-dom'
-  import './Message.css'
-  import React from 'react';
+/**
+ * A React component that represents the About Us page of the app.
+ * @param {*} param0 an object holding any props passed to this component from its parent component
+ * @returns The contents of this component, in JSX form.
+ */
+const About = props => {
+  const [aboutData, setAboutData] = useState(null)
+  const [loaded, setLoaded] = useState(false)
+  const [error, setError] = useState('')
 
-  
-  /**
-   * A React component that represents one Message in the list of messages.
-   * @param {*} param0 an object holding any props and a few function definitions passed to this component from its parent component
-   * @returns The contents of this component, in JSX form.
-   */
+  const fetchAboutData = () => {
+    const API_HOST = (process.env.REACT_APP_SERVER_HOSTNAME || '').replace(/\/$/, '')
 
+    axios
+      .get(`${API_HOST}/aboutme`)
+      .then(response => {
+        setAboutData(response.data)
+      })
+      .catch(err => {
 
+        const message =
+          err?.response?.data
+            ? JSON.stringify(err.response.data, null, 2)
+            : `${err.message}`
+        setError(message)
+      })
+      .finally(() => {
+        setLoaded(true)
+      })
+  }
 
-  const AboutMe = props => {
-    return (
-    <div className="about-me">
-      <h1>About Me</h1>
-      <p>
-      Hi my name is Lauren and I’m from New Jersey.  I love meeting people, some of my favorite chatting with my friends at a cafe or sitting in Washington Square Park and just people watching.  Also I’m a big foodie, I love trying new food from different cultures and experimenting new restaurants and even though I love foodie, I’m a horrible chef and a mediocre baker at best; but I am the best guest. I enjoy working out at the gym and I also do martial arts.
-      </p>
+  useEffect(() => {
+    fetchAboutData()
+  }, [])
+
+  if (!loaded) {
+    return <div className="About-loading">Loading...</div>
+  }
+
+  if (error) {
+    return <div className="About-error">Error: {error}</div>
+  }
+
+  if (!aboutData) {
+    return <div className="About-error">No data available</div>
+  }
+
+  return (
+    <div className="About-container">
+      <h1>About Us</h1>
+      <div className="About-content">
+        <div className="About-image-container">
+          <img 
+            src={aboutData.imageUrl} 
+            alt={aboutData.name}
+            className="About-image"
+          />
+        </div>
+        <div className="About-text">
+          <h2>{aboutData.name}</h2>
+          <h3>{aboutData.title}</h3>
+          <p className="About-description">{aboutData.description}</p>
+        </div>
+      </div>
     </div>
-  );
-};
+  )
+}
 
-export default AboutMe;
-
-  
+export default About

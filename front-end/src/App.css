@@ -37,3 +37,17 @@ html {
 .App-link {
   color: #61dafb;
 }
+
+
+
+.About-image-container {
+  display: flex;
+  justify-content: center;   
+}
+
+.About-image {
+  width: clamp(96px, 20vw, 160px); 
+  height: auto;
+  display: block;
+  border-radius: 12px;
+}

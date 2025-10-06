@@ -78,5 +78,31 @@ app.post('/messages/save', async (req, res) => {
   }
 })
 
+
+
+// a route to handle fetching information for aboutme page 
+app.get('/aboutme', async (req, res) => {
+  try {
+    const aboutData = {
+      name: "Lauren Thorve",
+      title: "Computer Science and Economics Student @ NYU",
+      description: "Hi my name is Lauren and I’m from New Jersey.  I love meeting people, some of my favorite chatting with my friends at a cafe or sitting in Washington Square Park and just people watching.  Also I’m a big foodie, I love trying new food from different cultures and experimenting new restaurants and even though I love foodie, I’m a horrible chef and a mediocre baker at best; but I am the best guest. I enjoy working out at the gym and I also do martial arts.",
+      imageUrl: "/me.jpeg",
+      status: 'all good'
+    }
+    res.json(aboutData)
+  } catch (err) {
+    console.error(err)
+    res.status(400).json({
+      error: err,
+      status: 'failed to retrieve about data',
+    })
+  }
+})
+
+
+
+
+
 // export the express app we created to make it available to other modules
 module.exports = app // CommonJS export style!
